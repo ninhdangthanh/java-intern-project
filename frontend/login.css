@@ -1,0 +1,42 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form_login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 120px;
+    background-color: #0b86c9;
+}
+
+.form_login_form {
+    background-color: white;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 40px 40px;
+    border-radius: 10px;
+}
+
+.form_login_input {
+    width: 90%;
+}
+
+.page_form_login_title {
+    padding-bottom: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.form_login_signup {
+    padding-top: 5px;
+    font-size: 18px;
+    color: white;
+}

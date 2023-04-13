@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="https://tse3.mm.bing.net/th?id=OIP.5rx2RKvMKN1LGZAFSLknJAAAAA&pid=Api&P=0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <title>Intern Project</title>
+</head>
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+        display: none;
+    }
+
+    /* Style for the form container */
+    .form-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        z-index: 2;
+    }
+</style>
+
+<body>
+
+    <div class="header">
+        <div class="header_wrap">
+            <a href="" class="food_header_logo">
+                <h1 class="header_title">Intern Project</h1>
+            </a>
+            <div class="header_hello_title">
+                <div class="button_create_in_header">
+                    <button class="btn btn-success btn-add-to-sort btn-add-product-server" href="">
+                        <strong>Add Product</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="content_wrap">
+            <div class="content_left">
+                <a href="" class="content_left_item ">All Product</a>
+                <a href="" class="content_left_item">Sort</a>
+                <a href="" class="content_left_item content_left_item_logout_active">My Product</a>
+                <a href="" class="content_left_item">List User</a>
+                <a href="" class="content_left_item">Account</a>
+                <a href="" class="content_left_item content_left_item_logout">Logout</a>
+            </div>
+
+            <div class="content_right">
+                <div class="product_list_item">
+                    <div class="product_item">
+                        <h3 class="product_item_title">Điện thoại iPhone 14 512GB</h3>
+                        <div class="product_item_price">31.830.000₫</div><br>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-warning" href="">
+                                Edit
+                            </a>
+                        </div>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-danger btn-add-to-sort" href="">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay">
+            <div class="form-container">
+                <h2>Create New Product</h2>
+                <form action="/" method="post">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required><br><br>
+
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" required><br><br>
+
+                    <input class="btn btn-success" type="submit" value="Create">
+                </form> <br>
+                <button id="close-form-btn" class="btn btn-danger">Close Form</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+</body>
+<script>
+    // Get the open and close button elements
+    const openBtn = document.querySelector('.btn-add-product-server');
+    const closeBtn = document.getElementById('close-form-btn');
+
+    // Get the overlay and form container elements
+    const overlay = document.querySelector('.overlay');
+    const formContainer = document.querySelector('.form-container');
+
+    // Add event listeners to open and close the form
+    openBtn.addEventListener('click', () => {
+        console.log("okkkkkkkk")
+        overlay.style.display = 'block';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        overlay.style.display = 'none';
+    });
+</script>
+
+</html>

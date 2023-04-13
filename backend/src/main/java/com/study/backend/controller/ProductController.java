@@ -42,7 +42,6 @@ public class ProductController {
         }
         // Perform any necessary validation
         existingProduct.setName(product.getName());
-        existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
 
         productService.updateProduct(existingProduct);

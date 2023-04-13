@@ -1,4 +1,4 @@
-package com.study.backend.entity;
+package com.study.backend.entity.value;
 
 public enum Gender {
     MALE,

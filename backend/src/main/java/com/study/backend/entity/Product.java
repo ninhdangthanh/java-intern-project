@@ -29,9 +29,6 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
     @Positive(message = "Price must be greater than zero")
     private int price;
 
