@@ -2,15 +2,16 @@ package com.study.backend.service;
 
 import com.study.backend.entity.Product;
 import com.study.backend.entity.Sort;
-import com.study.backend.entity.User;
+import com.study.backend.user.User;
+import com.study.backend.exception.NotFoundException;
 import com.study.backend.repository.ProductRepository;
 import com.study.backend.repository.SortRepository;
 import com.study.backend.repository.UserRepository;
 import com.study.backend.request.SortRaw;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -43,10 +44,18 @@ public class SortService {
 
 
     public Sort getSortById(Long id) {
-        return sortRepository.findById(id).orElse(null);
+        Sort sort = sortRepository.findById(id).orElse(null);
+        if (sort == null) {
+            throw new NotFoundException("Sort with id: " + id + " not existing");
+        }
+        return sort;
     }
 
     public void deleteSortById(Long id) {
+        Sort sort = getSortById(id);
+        if (sort == null) {
+            throw new NotFoundException("Sort with id: " + id + " not existing");
+        }
         sortRepository.deleteById(id);
     }
 

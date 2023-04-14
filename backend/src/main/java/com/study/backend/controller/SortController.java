@@ -1,6 +1,9 @@
 package com.study.backend.controller;
 
 import com.study.backend.entity.Sort;
+import com.study.backend.exception.BadRequestException;
+import com.study.backend.exception.NotFoundException;
+import com.study.backend.request.ResponseData;
 import com.study.backend.request.SortRaw;
 import com.study.backend.service.SortService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,49 +20,55 @@ public class SortController {
     @Autowired
     private SortService sortService;
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ResponseData<String>> handleBadRequestException(BadRequestException ex) {
+        ResponseData<String> response = new ResponseData<>("Error", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ResponseData<String>> handleNotFoundException(NotFoundException ex) {
+        ResponseData<String> response = new ResponseData<>("Error", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping
-    public ResponseEntity<Sort> createSort(@RequestBody SortRaw sortRaw) {
+    public ResponseEntity<ResponseData<Sort>> createSort(@RequestBody SortRaw sortRaw) {
         Sort createdSort = sortService.createSort(sortRaw);
-        return new ResponseEntity<>(createdSort, HttpStatus.CREATED);
+        ResponseData<Sort> response = new ResponseData<>("Create success", createdSort);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sort> getSortById(@PathVariable Long id) {
+    public ResponseEntity<ResponseData<Sort>> getSortById(@PathVariable Long id) {
         Sort sort = sortService.getSortById(id);
-        if (sort == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(sort, HttpStatus.OK);
+        ResponseData<Sort> response = new ResponseData<>("Success", sort);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<Sort>> getSortByUserId(@PathVariable Long id) {
+    public ResponseEntity<ResponseData<List<Sort>>> getSortByUserId(@PathVariable Long id) {
         List<Sort> sorts = sortService.getSortsByUserId(id);
-        if (sorts == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(sorts, HttpStatus.OK);
+        ResponseData<List<Sort>> response = new ResponseData<>("Success", sorts);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/{quantity}")
-    public ResponseEntity<Void> updateSort(@PathVariable Long id, @PathVariable int quantity) {
+    public ResponseEntity<ResponseData<String>> updateSort(@PathVariable Long id, @PathVariable int quantity) {
         Sort existingSort = sortService.getSortById(id);
-        if (existingSort == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        // Perform any necessary validation
+
         existingSort.setQuantity(quantity);
         sortService.updateSort(existingSort);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        ResponseData<String> response = new ResponseData<>("Update success", "Update sort with id = " + id + " success!");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSortById(@PathVariable Long id) {
-        Sort existingSort = sortService.getSortById(id);
-        if (existingSort == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ResponseData<String>> deleteSortById(@PathVariable Long id) {
         sortService.deleteSortById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        ResponseData<String> response = new ResponseData<>("Delete success", "Delete sort with id = " + id);
+        return ResponseEntity.ok(response);
     }
 }

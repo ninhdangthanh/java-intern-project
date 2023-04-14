@@ -1,12 +1,12 @@
 package com.study.backend.token;
 
-import com.study.backend.entity.User;
+import com.study.backend.user.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 @Data
 @Builder
@@ -29,7 +29,7 @@ public class Token {
 
   public boolean expired;
 
-//  @ManyToOne(fetch = FetchType.LAZY)
-//  @JoinColumn(name = "user_id")
-//  public User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  public User user;
 }

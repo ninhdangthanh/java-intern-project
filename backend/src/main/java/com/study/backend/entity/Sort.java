@@ -2,9 +2,10 @@ package com.study.backend.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import javax.persistence.*;
-import javax.validation.constraints.Positive;
+import com.study.backend.user.User;
+import jakarta.persistence.*;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

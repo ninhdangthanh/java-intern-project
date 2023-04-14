@@ -1,6 +1,6 @@
 package com.study.backend.repository;
 
-import com.study.backend.entity.User;
+import com.study.backend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
