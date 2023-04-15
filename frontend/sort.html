@@ -70,4 +70,62 @@
 </body>
 
 </html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="index.js"></script>
+
+<script>
+    function getIdUser(myfunction) {
+        axios.get(`http://localhost:8080/api/v1/users/email/${localStorage.getItem("intern_user_email")}`, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+            }
+        })
+            .then(response => {
+                // handle success
+                console.log();
+                var userId = response.data.data.id;
+                myfunction(userId)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    function getSortByUserId(userId) {
+        axios.get(`http://localhost:8080/api/v1/sorts/user/${userId}`, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+            }
+        })
+            .then(response => {
+                // handle success
+                var listSortProduct = response.data.data
+                var listSortEle = listSortProduct.map(item => {
+                    return `<div class="product_item">
+                        <h3 class="product_item_title">${item.name}</h3>
+                        <div class="product_item_price">Price: ${item.price}₫</div>
+                        <div class="product_item_quantity">Quantity: ${item.quantity}</div>
+                        <div class="product_item_price">Total: ${item.price * item.quantity}₫</div>
+                        <br>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-warning " href="edit-sort.html?id=${item.id}">
+                                Edit Quantity
+                            </a>
+                        </div>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-danger btn-add-to-sort" href="delete-sort.html?id=${item.id}">
+                                Delete from Sort
+                            </a>
+                        </div>
+                    </div>`
+                })
+                document.querySelector(".product_list_item").innerHTML = listSortEle.join("")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    getIdUser(getSortByUserId)
+
+</script>

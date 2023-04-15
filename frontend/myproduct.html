@@ -138,7 +138,6 @@
                 // handle success
                 console.log();
                 var userId = response.data.data.id;
-                userID = userID
                 myfunction(userId)
             })
             .catch(error => {
@@ -160,7 +159,7 @@
                         <h3 class="product_item_title">${item.name}</h3>
                         <div class="product_item_price">${item.price}₫</div><br>
                         <div class="product_item_button_detail">
-                            <a class="btn btn-warning" href="product-edit/${item.id}">
+                            <a class="btn btn-warning" href="">
                                 Edit
                             </a>
                         </div>

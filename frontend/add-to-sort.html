@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sort</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const productid = params.get('sortid');
+
+    function getIdUser(myfunction) {
+        axios.get(`http://localhost:8080/api/v1/users/email/${localStorage.getItem("intern_user_email")}`, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+            }
+        })
+            .then(response => {
+                // handle success
+                console.log();
+                var userId = response.data.data.id;
+                myfunction(userId)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+
+    function addSort(userId) {
+
+        var payload = {
+            user_id: userId,
+            product_id: parseInt(productid),
+            quantity: 1
+        }
+
+        axios.post(`http://localhost:8080/api/v1/sorts`, JSON.stringify(payload), {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token"),
+                'Content-Type': 'application/json;charset=UTF-8',
+            }
+        })
+            .then(response => {
+                alert("Add product to sort success!")
+                window.location.href = 'index.html';
+            })
+            .catch(error => {
+                alert("Add product to sort failed!")
+                window.location.href = 'index.html';
+            });
+    }
+
+    getIdUser(addSort)
+
+</script>

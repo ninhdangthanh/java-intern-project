@@ -1,6 +1,7 @@
 package com.study.backend.controller;
 
 import com.study.backend.entity.Sort;
+import com.study.backend.entity.SortInfo;
 import com.study.backend.exception.BadRequestException;
 import com.study.backend.exception.ForbiddenException;
 import com.study.backend.exception.NotFoundException;
@@ -16,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/sorts")
-@CrossOrigin(origins = "*")
 public class SortController {
 
     @Autowired
@@ -55,9 +55,9 @@ public class SortController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<ResponseData<List<Sort>>> getSortByUserId(@PathVariable Long id) {
-        List<Sort> sorts = sortService.getSortsByUserId(id);
-        ResponseData<List<Sort>> response = new ResponseData<>("Success", sorts);
+    public ResponseEntity<ResponseData<List<SortInfo>>> getSortByUserId(@PathVariable Long id) {
+        List<SortInfo> sorts = sortService.getSortsByUserId(id);
+        ResponseData<List<SortInfo>> response = new ResponseData<>("Success", sorts);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

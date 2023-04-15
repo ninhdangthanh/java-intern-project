@@ -1,5 +1,6 @@
 package com.study.backend.config;
 
+import com.study.backend.exception.ForbiddenException;
 import com.study.backend.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -59,7 +60,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new WebAuthenticationDetailsSource().buildDetails(request)
         );
         SecurityContextHolder.getContext().setAuthentication(authToken);
+      } else {
+        throw new ForbiddenException("Failed Authentication");
       }
+    } else {
+      throw new ForbiddenException("Failed Authentication");
     }
     filterChain.doFilter(request, response);
   }
