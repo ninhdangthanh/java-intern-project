@@ -40,3 +40,17 @@
     font-size: 18px;
     color: white;
 }
+
+.cf_password {
+    color: red;
+}
+
+.signin_status {
+    color: greenyellow;
+    font-weight: bold;
+}
+
+.signin_status_failed {
+    color: red;
+    font-weight: bold;
+}

@@ -32,18 +32,20 @@
     <div class="content">
         <div class="content_wrap">
             <div class="content_left">
-                <a href="" class="content_left_item ">All Product</a>
-                <a href="" class="content_left_item">Sort</a>
-                <a href="" class="content_left_item">My Product</a>
-                <a href="" class="content_left_item">List User</a>
-                <a href="" class="content_left_item content_left_item_logout_active">Account</a>
+                <a href="index.html" class="content_left_item ">All Product</a>
+                <a href="sort.html" class="content_left_item">Sort</a>
+                <a href="myproduct.html" class="content_left_item">My Product</a>
+                <a href="listuser.html" class="content_left_item">List User</a>
+                <a href="account.html" class="content_left_item content_left_item_logout_active">Account</a>
                 <a href="" class="content_left_item content_left_item_logout">Logout</a>
             </div>
 
             <div class="content_right content-right-account">
-                <div>Email: ninh@gmail.com</div><br>
-                <div>Gender: MALE</div><br>
-                <div>ROLE: USER</div><br>
+                <div class="id_show">ID: 1</div><br>
+                <div class="email_show">Email: ninh@gmail.com</div><br>
+                <div class="gender_show">Gender: MALE</div><br>
+                <div class="role_show">ROLE: USER</div><br>
+                <div class="account_show">ACCOUNT: USER</div><br>
                 <div class="">
                     <button class="btn btn-warning" id="toggleBtn" href="">
                         <strong>Change Password</strong>
@@ -81,7 +83,7 @@
     </div>
 
     <div class="footer"></div>
-
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </body>
 <script>
     function checkPasswordMatch() {
@@ -102,11 +104,82 @@
         overlay.style.display = (overlay.style.display === 'none') ? 'block' : 'none';
     });
 
+
+    const intern_access_token = localStorage.getItem("intern_access_token");
+
+    const base64Url = intern_access_token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    const payload = JSON.parse(jsonPayload).sub;
+
+    var id_show = document.querySelector(".id_show")
+    var email_show = document.querySelector(".email_show")
+    var gender_show = document.querySelector(".gender_show")
+    var role_show = document.querySelector(".role_show")
+    var account_show = document.querySelector(".account_show")
+
+    var userID = null;
+
+    axios.get(`http://localhost:8080/api/v1/users/email/${payload}`, {
+        headers: {
+            'Authorization': "Bearer " + intern_access_token
+        }
+    })
+        .then(response => {
+            // handle success
+            userID = response.data.data.id
+            id_show.innerHTML = "<strong>ID:</strong> " + response.data.data.id
+            email_show.innerHTML = "<strong>EMAIL:</strong> " + response.data.data.email
+            gender_show.innerHTML = "<strong>GENDER:</strong> " + response.data.data.gender
+            role_show.innerHTML = "<strong>ROLE:</strong> " + response.data.data.role
+            account_show.innerHTML = "<strong>ACCOUNT:</strong> " + response.data.data.account
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    //change password
+
     document.querySelector(".form_change_password").addEventListener("submit", function (e) {
         e.preventDefault();
         overlay.style.display = (overlay.style.display === 'none') ? 'block' : 'none';
+
+        var password_old = document.getElementById('password_old').value;
+        var password_new = document.getElementById('password_new').value;
+        var password_confirm = document.getElementById('password_confirm').value;
+
+        var payload = {
+            old_password: password_old,
+            new_password: password_new,
+            confirm_password: password_confirm
+        };
+        console.log(payload);
+
+        axios.put(`http://localhost:8080/api/v1/users/resetpassword/${userID}`, JSON.stringify(payload), {
+            headers: {
+                'Authorization': "Bearer " + intern_access_token,
+                'Content-Type': 'application/json;charset=UTF-8',
+            }
+        })
+            .then(response => {
+                // handle success
+                alert("Change password success!")
+                document.getElementById('password_old').value = ""
+                document.getElementById('password_new').value = ""
+                document.getElementById('password_confirm').value = ""
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
     })
+
+
 
 </script>
 
 </html>
+<script src="index.js"></script>

@@ -61,7 +61,7 @@ public class User {
     @JsonIgnore
     private List<Sort> sorts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Token> tokens;
 
 

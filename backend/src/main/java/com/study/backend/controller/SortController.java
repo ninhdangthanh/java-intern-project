@@ -2,6 +2,7 @@ package com.study.backend.controller;
 
 import com.study.backend.entity.Sort;
 import com.study.backend.exception.BadRequestException;
+import com.study.backend.exception.ForbiddenException;
 import com.study.backend.exception.NotFoundException;
 import com.study.backend.request.ResponseData;
 import com.study.backend.request.SortRaw;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/sorts")
+@CrossOrigin(origins = "*")
 public class SortController {
 
     @Autowired
@@ -30,6 +32,12 @@ public class SortController {
     public ResponseEntity<ResponseData<String>> handleNotFoundException(NotFoundException ex) {
         ResponseData<String> response = new ResponseData<>("Error", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ResponseData<String>> handleForbiddenException(NotFoundException ex) {
+        ResponseData<String> response = new ResponseData<>("Error", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping

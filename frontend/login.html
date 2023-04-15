@@ -23,32 +23,65 @@
 
 <body>
     <div class="form_login">
+        <h3 class="signin_status_failed"></h3>
         <form class="form_login_form" action="">
             <h2 class="form_login_title">Đăng nhập</h2>
             <div class="mb-3 form_login_input">
-                <label for="exampleInputUsername" class="form-label"><strong>Email:</strong></label>
-                <input placeholder="Nhập email" type="text" class="form-control" id="exampleInputUsername"
+                <label for="emailinput" class="form-label"><strong>Email:</strong></label>
+                <input placeholder="Nhập email" type="text" class="form-control" id="emailinput"
                     aria-describedby="emailHelp">
             </div>
             <div class="mb-3 form_login_input">
-                <label for="exampleInputPassword" class="form-label"><strong>Password</strong></label>
-                <input type="password" placeholder="Nhập password" class="form-control" id="exampleInputPassword">
+                <label for="paswordinput" class="form-label"><strong>Password</strong></label>
+                <input type="password" placeholder="Nhập password" class="form-control" id="paswordinput">
             </div>
             <button type="submit" class="btn btn-primary btn-form-login-submit">Đăng nhập</button>
             <br>
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </form>
-        <a class="form_login_signup" href="">Đăng kí</a>
+        <a class="form_login_signup" href="signin.html">Đăng kí</a>
     </div>
 </body>
 
 </html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     function onSignIn(googleUser) {
         // Get the user's ID token and send it to the server for verification
         var id_token = googleUser.getAuthResponse().id_token;
         // ... Code to send the ID token to the server ...
     }
+
+    var emailInpDom = document.getElementById("emailinput")
+    var passwordInpDom = document.getElementById("paswordinput")
+
+    document.querySelector(".form_login_form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        axios.post('http://localhost:8080/api/v1/auth/login', {
+            email: emailInpDom.value,
+            password: passwordInpDom.value,
+        })
+            .then(response => {
+                localStorage.setItem('intern_refresh_token', response.data.data.refresh_token);
+                localStorage.setItem('intern_access_token', response.data.data.access_token);
+
+                const base64Url = response.data.data.access_token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                const payload = JSON.parse(jsonPayload);
+                localStorage.setItem('intern_user_email', payload.sub);
+                localStorage.setItem('intern_user_role', payload.roles[0].authority);
+
+                window.location.href = 'index.html';
+            })
+            .catch(error => {
+                document.querySelector(".signin_status_failed").innerHTML = "Đăng nhập thất bại, lỗi: " + error
+            });
+    })
+
 </script>
 
 <style>

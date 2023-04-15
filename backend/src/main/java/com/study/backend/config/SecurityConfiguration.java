@@ -3,6 +3,7 @@ package com.study.backend.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +25,8 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
+        .cors()
+            .and()
         .csrf()
         .disable()
         .authorizeHttpRequests()
@@ -31,7 +34,8 @@ public class SecurityConfiguration {
           .permitAll()
         .requestMatchers("/api/v1/sorts/**")
           .permitAll()
-        .requestMatchers("/api/v1/products/**").hasAnyAuthority("ROLE_SALESMAN")
+//        .requestMatchers(HttpMethod.GET,"/api/v1/products").hasAnyAuthority("ROLE_ADMIN")
+//        .requestMatchers(HttpMethod.GET,"/api/v1/products/user/**").hasAnyAuthority("ROLE_USER")
         .anyRequest()
           .authenticated()
         .and()
@@ -48,4 +52,5 @@ public class SecurityConfiguration {
 
     return http.build();
   }
+
 }

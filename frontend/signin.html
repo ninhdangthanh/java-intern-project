@@ -23,50 +23,95 @@
 
 <body>
     <div class="form_login">
-        <form class="form_login_form" action="">
+        <h3 class="signin_status"></h3>
+        <h3 class="signin_status_failed"></h3>
+        <form class="form_signin_form form_login_form" action="">
             <h2 class="form_login_title">Đăng kí</h2>
             <div class="mb-3 form_login_input">
-                <label for="exampleInputUsername" class="form-label"><strong>Email:</strong></label>
-                <input placeholder="Nhập email" type="text" class="form-control" id="exampleInputUsername"
+                <label for="signin_email" class="form-label"><strong>Email:</strong></label>
+                <input required placeholder="Nhập email" type="email" class="form-control" id="signin_email"
                     aria-describedby="emailHelp">
             </div>
             <div class="mb-3 form_login_input">
-                <label for="gender" class="form-label">Giới tính</label>
-                <select name="gender" id="gender" class="form-select">
+                <label for="signin_gender" class="form-label">Giới tính</label>
+                <select name="signin_gender" id="signin_gender" class="form-select">
                     <option value="MALE" selected>Nam</option>
-                    <option value="FEMALE" selected>Nữ</option>
+                    <option value="FEMALE">Nữ</option>
                 </select>
             </div>
             <div class="mb-3 form_login_input">
-                <label for="role" class="form-label">Vai trò</label>
-                <select id="role" name="role" class="form-select">
+                <label for="signin_role" class="form-label">Vai trò</label>
+                <select id="signin_role" name="signin_role" class="form-select">
                     <option value="ADMIN">Admin</option>
                     <option value="SALESMAN">Người bán hàng</option>
                     <option value="USER" selected>Người dùng</option>
                 </select>
             </div>
             <div class="mb-3 form_login_input">
-                <label for="exampleInputPassword" class="form-label"><strong>Password</strong></label>
-                <input type="password" placeholder="Nhập password" class="form-control" id="exampleInputPassword">
+                <label for="signin_password" class="form-label"><strong>Password</strong></label>
+                <input pattern=".{8,}" required type="password" placeholder="Nhập password" class="form-control"
+                    id="signin_password">
             </div>
             <div class="mb-3 form_login_input">
-                <label for="exampleInputPassword_confirm" class="form-label"><strong>Confirm Password</strong></label>
-                <input type="password_confirm" placeholder="Xác nhận password" class="form-control"
-                    id="exampleInputPassword_confirm">
+                <label for="signin_password_confirm" class="form-label"><strong>Confirm Password</strong></label>
+                <input oninput="validatePassword()" pattern=".{8,}" required type="password"
+                    placeholder="Xác nhận password" class="form-control" id="signin_password_confirm">
             </div>
+            <small class="cf_password"></small>
             <button type="submit" class="btn btn-primary btn-form-login-submit">Đăng kí</button>
             <br>
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </form>
-        <a class="form_login_signup" href="">Đăng nhập</a>
+        <a class="form_login_signup" href="login.html">Đăng nhập</a>
     </div>
 </body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     function onSignIn(googleUser) {
         // Get the user's ID token and send it to the server for verification
         var id_token = googleUser.getAuthResponse().id_token;
         // ... Code to send the ID token to the server ...
     }
+    function validatePassword() {
+        const password = document.getElementById("signin_password");
+        const confirm = document.getElementById("signin_password_confirm");
+
+        if (password.value != confirm.value) {
+            document.querySelector(".cf_password").innerHTML = "Passwords don't match";
+            confirm.setCustomValidity("Passwords don't match");
+        } else {
+            document.querySelector(".cf_password").innerHTML = "";
+            confirm.setCustomValidity("");
+        }
+    }
+
+    var emailSi = document.getElementById("signin_email")
+    var genderSi = document.getElementById("signin_gender")
+    var roleSi = document.getElementById("signin_role")
+    var passSi = document.getElementById("signin_password")
+    var passcfSi = document.getElementById("signin_password_confirm")
+
+    document.querySelector(".form_signin_form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        axios.post('http://localhost:8080/api/v1/auth/register', {
+            email: emailSi.value,
+            password: passSi.value,
+            gender: genderSi.value,
+            role: roleSi.value,
+            account: "EMAIL"
+        })
+            .then(response => {
+                document.querySelector(".signin_status").innerHTML = "Đăng kí thành công!"
+                document.querySelector(".signin_status_failed").innerHTML = ""
+                console.log(response.data);
+                console.log(response.data.data);
+                console.log(response.data.message);
+            })
+            .catch(error => {
+                document.querySelector(".signin_status").innerHTML = ""
+                document.querySelector(".signin_status_failed").innerHTML = "Đăng kí thất bại, lỗi: " + error
+            });
+    })
 </script>
 
 </html>

@@ -61,11 +61,11 @@
     <div class="content">
         <div class="content_wrap">
             <div class="content_left">
-                <a href="" class="content_left_item ">All Product</a>
-                <a href="" class="content_left_item">Sort</a>
-                <a href="" class="content_left_item content_left_item_logout_active">My Product</a>
-                <a href="" class="content_left_item">List User</a>
-                <a href="" class="content_left_item">Account</a>
+                <a href="index.html" class="content_left_item ">All Product</a>
+                <a href="sort.html" class="content_left_item">Sort</a>
+                <a href="myproduct.html" class="content_left_item content_left_item_logout_active">My Product</a>
+                <a href="listuser.html" class="content_left_item">List User</a>
+                <a href="account.html" class="content_left_item">Account</a>
                 <a href="" class="content_left_item content_left_item_logout">Logout</a>
             </div>
 
@@ -93,12 +93,12 @@
         <div class="overlay">
             <div class="form-container">
                 <h2>Create New Product</h2>
-                <form action="/" method="post">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required><br><br>
+                <form action="/" method="post" class="form-add-product">
+                    <label for="nameproduct">Name:</label>
+                    <input type="text" id="nameproduct" name="name" required><br><br>
 
-                    <label for="price">Price:</label>
-                    <input type="number" id="price" name="price" required><br><br>
+                    <label for="priceproduct">Price:</label>
+                    <input type="number" id="priceproduct" name="price" required><br><br>
 
                     <input class="btn btn-success" type="submit" value="Create">
                 </form> <br>
@@ -110,7 +110,9 @@
     <div class="footer"></div>
 
 </body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    var userID;
     // Get the open and close button elements
     const openBtn = document.querySelector('.btn-add-product-server');
     const closeBtn = document.getElementById('close-form-btn');
@@ -120,14 +122,100 @@
     const formContainer = document.querySelector('.form-container');
 
     // Add event listeners to open and close the form
-    openBtn.addEventListener('click', () => {
-        console.log("okkkkkkkk")
-        overlay.style.display = 'block';
-    });
+
 
     closeBtn.addEventListener('click', () => {
         overlay.style.display = 'none';
     });
+
+    function getIdUser(myfunction) {
+        axios.get(`http://localhost:8080/api/v1/users/email/${localStorage.getItem("intern_user_email")}`, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+            }
+        })
+            .then(response => {
+                // handle success
+                console.log();
+                var userId = response.data.data.id;
+                userID = userID
+                myfunction(userId)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    async function getProducts(userId) {
+        await axios.get(`http://localhost:8080/api/v1/products/user/${userId}`, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+
+            }
+        })
+            .then(response => {
+                // handle success
+                var itemList = response.data.data.map(item => {
+                    return `<div class="product_item">
+                        <h3 class="product_item_title">${item.name}</h3>
+                        <div class="product_item_price">${item.price}₫</div><br>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-warning" href="product-edit/${item.id}">
+                                Edit
+                            </a>
+                        </div>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-danger btn-add-to-sort" href="product-delete.html?id=${item.id}">
+                                Delete
+                            </a>
+                        </div>
+                    </div>`
+                })
+                document.querySelector(".product_list_item").innerHTML = itemList.join("")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    async function addProducts(userId) {
+        let nameproduct = await document.getElementById("nameproduct")
+        let priceproduct = await document.getElementById("priceproduct")
+        let payload = {
+            name: nameproduct.value,
+            price: parseInt(priceproduct.value)
+        }
+        await axios.post(`http://localhost:8080/api/v1/products/${userId}`, JSON.stringify(payload), {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+                , 'Content-Type': 'application/json;charset=UTF-8'
+            }
+        })
+            .then(response => {
+                overlay.style.display = 'none';
+                alert("Add product success!")
+                console.log(response);
+                location.reload();
+            })
+            .catch(error => {
+                overlay.style.display = 'none';
+                alert("Add product failed!")
+                console.log(error);
+            });
+    }
+
+    getIdUser(getProducts)
+
+    openBtn.addEventListener('click', () => {
+        overlay.style.display = 'block';
+    });
+
+    document.querySelector(".form-add-product").addEventListener("submit", function (e) {
+        e.preventDefault()
+        getIdUser(addProducts)
+    })
+
 </script>
 
 </html>
+<script src="index.js"></script>

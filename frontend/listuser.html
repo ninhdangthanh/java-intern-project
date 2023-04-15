@@ -39,11 +39,11 @@
     <div class="content">
         <div class="content_wrap">
             <div class="content_left">
-                <a href="" class="content_left_item ">All Product</a>
-                <a href="" class="content_left_item">Sort</a>
-                <a href="" class="content_left_item">My Product</a>
-                <a href="" class="content_left_item content_left_item_logout_active">List User</a>
-                <a href="" class="content_left_item">Account</a>
+                <a href="index.html" class="content_left_item ">All Product</a>
+                <a href="sort.html" class="content_left_item">Sort</a>
+                <a href="myproduct.html" class="content_left_item">My Product</a>
+                <a href="listuser.html" class="content_left_item content_left_item_logout_active">List User</a>
+                <a href="account.html" class="content_left_item">Account</a>
                 <a href="" class="content_left_item content_left_item_logout">Logout</a>
             </div>
 
@@ -55,6 +55,7 @@
                             <th class="th-bg" scope="col">Email</th>
                             <th class="th-bg" scope="col">Gender</th>
                             <th class="th-bg" scope="col">Role</th>
+                            <th class="th-bg" scope="col">Account</th>
                             <th class="th-bg" scope="col"><i data-bs-toggle="tooltip" data-bs-placement="top"
                                     data-bs-title="Xóa" class="bi bi-trash"></i></th>
                         </tr>
@@ -65,6 +66,7 @@
                             <td>ninh@gmail.com</td>
                             <td>MALE</td>
                             <td>USER</td>
+                            <td>ACCOUNT</td>
                             <td><a href=""><i class="bi bi-trash"></i></a></td>
                         </tr>
                     </tbody>
@@ -76,5 +78,40 @@
     <div class="footer"></div>
 
 </body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 </html>
+<script src="index.js"></script>
+<script>
+    const intern_access_token = localStorage.getItem("intern_access_token");
+    var body_restaurant = document.querySelector(".body_restaurant")
+    axios.get('http://localhost:8080/api/v1/users', {
+        headers: {
+            'Authorization': "Bearer " + intern_access_token
+        }
+    })
+        .then(response => {
+            // handle success
+            console.log(response.data.data);
+            var showData = response.data.data.filter(item => {
+                return item.email != localStorage.getItem("intern_user_email");
+            })
+            body_restaurant_item = showData.map(item => {
+                return `<tr class="hover-item-restaurant">
+                            <th scope="row">${item.id}</th>
+                            <td>${item.email}</td>
+                            <td>${item.gender}</td>
+                            <td>${item.role}</td>
+                            <td>${item.account}</td>
+                            <td><a href="delete-account.html?id=${item.id}"><i class="bi bi-trash"></i></a></td>
+                        </tr>`
+            })
+            body_restaurant.innerHTML = body_restaurant_item.join(" ")
+        })
+        .catch(error => {
+            // handle error
+            product_list_item.innerHTML = "Error: " + error
+        });
+
+
+</script>

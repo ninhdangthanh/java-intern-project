@@ -32,11 +32,11 @@
     <div class="content">
         <div class="content_wrap">
             <div class="content_left">
-                <a href="" class="content_left_item content_left_item_logout_active">All Product</a>
-                <a href="" class="content_left_item">Sort</a>
-                <a href="" class="content_left_item">My Product</a>
-                <a href="" class="content_left_item">List User</a>
-                <a href="" class="content_left_item">Account</a>
+                <a href="index.html" class="content_left_item content_left_item_logout_active">All Product</a>
+                <a href="sort.html" class="content_left_item">Sort</a>
+                <a href="myproduct.html" class="content_left_item">My Product</a>
+                <a href="listuser.html" class="content_left_item">List User</a>
+                <a href="account.html" class="content_left_item">Account</a>
                 <a href="" class="content_left_item content_left_item_logout">Logout</a>
             </div>
 
@@ -60,5 +60,39 @@
     <div class="footer"></div>
 
 </body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 </html>
+<script src="index.js"></script>
+<script>
+    var product_list_item = document.querySelector(".product_list_item");
+    var product_items;
+    console.log("index");
+    const intern_access_token = localStorage.getItem("intern_access_token");
+    axios.get('http://localhost:8080/api/v1/products', {
+        headers: {
+            'Authorization': "Bearer " + intern_access_token
+        }
+    })
+        .then(response => {
+            // handle success
+            console.log(response.data.data);
+            product_items = response.data.data.map(item => {
+                return `<div class="product_item">
+                        <h3 class="product_item_title">${item.name}</h3>
+                        <div class="product_item_price">${item.price}</div><br>
+                        <div class="product_item_button_detail">
+                            <a class="btn btn-info btn-add-to-sort" href="add-to-sort/${item.id}">
+                                Add to Sort
+                            </a>
+                        </div>
+                    </div>`
+            })
+            product_list_item.innerHTML = product_items.join(" ")
+        })
+        .catch(error => {
+            // handle error
+            product_list_item.innerHTML = "Error: " + error
+        });
+
+</script>

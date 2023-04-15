@@ -39,7 +39,7 @@ public class UserService {
 
         User user = new User();
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setGender(userDTO.getGender());
         user.setRole(userDTO.getRole());
         user.setAccount(userDTO.getAccount());
@@ -51,7 +51,7 @@ public class UserService {
     public void updateUser(@Valid UserDTO userDTO, Long id) {
         User user = getUserById(id);
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setGender(userDTO.getGender());
         user.setRole(userDTO.getRole());
         user.setAccount(userDTO.getAccount());
@@ -59,16 +59,15 @@ public class UserService {
     }
 
     public UserDTO updatePassword(Long id, @Valid PasswordReset passwordReset) {
-        passwordReset.setNew_password(passwordEncoder.encode(passwordReset.getNew_password()));
-        passwordReset.setConfirm_password(passwordEncoder.encode(passwordReset.getConfirm_password()));
-
         User user = getUserById(id);
-        if (!passwordReset.getOld_password().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(passwordReset.getOld_password(), user.getPassword())) {
             throw new BadRequestException("Old password is not match");
         }
         if (!passwordReset.getNew_password().equals(passwordReset.getConfirm_password())) {
             throw new BadRequestException("New Password and Password Confirm is not match");
         }
+        passwordReset.setNew_password(passwordEncoder.encode(passwordReset.getNew_password()));
+        passwordReset.setConfirm_password(passwordEncoder.encode(passwordReset.getConfirm_password()));
         user.setPassword(passwordReset.getNew_password());
         userRepository.save(user);
 
