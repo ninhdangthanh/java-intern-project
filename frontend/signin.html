@@ -16,7 +16,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <meta name="google-signin-client_id"
-        content="665674215864-qtt17ojb6um5715nhjpanji4cdqqjbqf.apps.googleusercontent.com">
+        content="982934469439-12kfpc5b1dbcq3bhn2498tskjafgi9g2.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>Intern Project Signin</title>
 </head>
@@ -70,7 +70,11 @@
     function onSignIn(googleUser) {
         // Get the user's ID token and send it to the server for verification
         var id_token = googleUser.getAuthResponse().id_token;
-        // ... Code to send the ID token to the server ...
+        var profile = googleUser.getBasicProfile();
+
+        // do something with the user's information
+        console.log('Logged in as ' + profile.getName());
+        console.log('ID Token: ' + id_token);
     }
     function validatePassword() {
         const password = document.getElementById("signin_password");

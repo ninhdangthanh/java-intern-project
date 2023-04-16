@@ -49,7 +49,7 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.DELETE,"/api/v1/products/**").hasAnyAuthority("ROLE_SALESMAN")
         .requestMatchers(HttpMethod.GET, "/api/v1/products").hasAnyAuthority("ROLE_SALESMAN", "ROLE_USER")
             //sort controller
-        .requestMatchers("/api/v1/products/**").hasAnyAuthority("ROLE_SALESMAN", "ROLE_USER")
+        .requestMatchers("/api/v1/sorts/**").hasAnyAuthority("ROLE_SALESMAN", "ROLE_USER")
         .anyRequest()
           .authenticated()
         .and()
