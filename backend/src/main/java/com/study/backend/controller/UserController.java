@@ -6,7 +6,6 @@ import com.study.backend.request.ForgotPassword;
 import com.study.backend.request.ValidateOTP;
 import com.study.backend.service.EmailService;
 import com.study.backend.service.OneTimePasswordService;
-import com.study.backend.user.User;
 import com.study.backend.exception.BadRequestException;
 import com.study.backend.exception.NotFoundException;
 import com.study.backend.request.PasswordReset;

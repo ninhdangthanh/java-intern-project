@@ -44,7 +44,10 @@ public class JwtService {
       Map<String, Object> extraClaims,
       UserDetails userDetails
   ) {
-    return buildToken(extraClaims, userDetails, jwtExpiration);
+    Claims claims = Jwts.claims();
+    claims.put("roles", userDetails.getAuthorities().stream()
+            .collect(Collectors.toList()));
+    return buildToken(claims, userDetails, jwtExpiration);
   }
 
   public String generateRefreshToken(
@@ -58,13 +61,10 @@ public class JwtService {
           UserDetails userDetails,
           long expiration
   ) {
-    Claims claims = Jwts.claims();
-    claims.put("roles", userDetails.getAuthorities().stream()
-            .collect(Collectors.toList()));
 
     return Jwts
             .builder()
-            .setClaims(claims)
+            .setClaims(extraClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
