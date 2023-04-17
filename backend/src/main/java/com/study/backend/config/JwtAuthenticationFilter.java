@@ -36,6 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
+    if (request.getServletPath().contains("/api/v1/users/forgot-password")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
     final String authHeader = request.getHeader("Authorization");
     final String jwt;
     final String userEmail;

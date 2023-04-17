@@ -58,6 +58,18 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void updateForgotPasswordUser(String email, String new_password, String new_password_confirm) {
+        if(new_password.length() < 8 && new_password.length() > 20) {
+            throw new BadRequestException("New password invalid!");
+        }
+        if(!new_password.equals(new_password_confirm)) {
+            throw new BadRequestException("New password not match with confirm of it!");
+        }
+        User user = getUserByEmail(email);
+        user.setPassword(passwordEncoder.encode(new_password));
+        userRepository.save(user);
+    }
+
     public UserDTO updatePassword(Long id, @Valid PasswordReset passwordReset) {
         User user = getUserById(id);
         if (!passwordEncoder.matches(passwordReset.getOld_password(), user.getPassword())) {

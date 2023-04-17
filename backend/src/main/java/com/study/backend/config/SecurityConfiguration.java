@@ -32,8 +32,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests()
         .requestMatchers("/api/v1/auth/**")
           .permitAll()
-        .requestMatchers("/api/v1/sorts/**")
-          .permitAll()
+        .requestMatchers("/api/v1/users/forgot-password/**").permitAll()
             //user controller
         .requestMatchers(HttpMethod.GET,"/api/v1/users").hasAnyAuthority("ROLE_ADMIN")
         .requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll()
