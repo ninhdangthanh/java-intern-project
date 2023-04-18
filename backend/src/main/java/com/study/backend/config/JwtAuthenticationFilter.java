@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,10 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         );
         SecurityContextHolder.getContext().setAuthentication(authToken);
       } else {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write("Access token has expired");
         throw new ForbiddenException("Failed Authentication");
       }
-    } else {
-      throw new ForbiddenException("Failed Authentication");
     }
     filterChain.doFilter(request, response);
   }

@@ -64,7 +64,7 @@
         })
             .then(response => {
                 localStorage.setItem('intern_refresh_token', response.data.data.refresh_token);
-                localStorage.setItem('intern_access_token', response.data.data.access_token);
+                sessionStorage.setItem('intern_access_token', response.data.data.access_token);
 
                 const base64Url = response.data.data.access_token.split('.')[1];
                 const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -82,6 +82,28 @@
                 document.querySelector(".signin_status_failed").innerHTML = "Đăng nhập thất bại, lỗi: " + error
             });
     })
+
+    function reloadAccessToken() {
+        if (localStorage.getItem("intern_refresh_token")) {
+            console.log("Bearer " + localStorage.getItem("intern_refresh_token"));
+            axios.post('http://localhost:8080/api/v1/auth/refresh-token', {}, {
+                headers: {
+                    'Authorization': "Bearer " + localStorage.getItem("intern_refresh_token"),
+                    'Content-Type': 'application/json;charset=UTF-8',
+                }
+            })
+                .then(response => {
+                    sessionStorage.setItem('intern_access_token', response.data.data.access_token);
+                    // console.log(response.data.data.access_token);
+                    window.location.href = 'index.html';
+                })
+                .catch(error => {
+                    console.log(error);
+                    localStorage.clear();
+                });
+        }
+    }
+    reloadAccessToken()
 
 </script>
 

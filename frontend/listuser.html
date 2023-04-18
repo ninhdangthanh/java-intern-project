@@ -84,7 +84,7 @@
 </html>
 <script src="index.js"></script>
 <script>
-    const intern_access_token = localStorage.getItem("intern_access_token");
+    const intern_access_token = sessionStorage.getItem("intern_access_token");
     var body_restaurant = document.querySelector(".body_restaurant")
     axios.get('http://localhost:8080/api/v1/users', {
         headers: {

@@ -106,7 +106,7 @@
     });
 
 
-    const intern_access_token = localStorage.getItem("intern_access_token");
+    const intern_access_token = sessionStorage.getItem("intern_access_token");
 
     const base64Url = intern_access_token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

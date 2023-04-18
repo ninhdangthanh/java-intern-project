@@ -132,7 +132,7 @@
     function getIdUser(myfunction) {
         axios.get(`http://localhost:8080/api/v1/users/email/${localStorage.getItem("intern_user_email")}`, {
             headers: {
-                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+                'Authorization': "Bearer " + sessionStorage.getItem("intern_access_token")
             }
         })
             .then(response => {
@@ -149,7 +149,7 @@
     async function getProducts(userId) {
         await axios.get(`http://localhost:8080/api/v1/products/user/${userId}`, {
             headers: {
-                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+                'Authorization': "Bearer " + sessionStorage.getItem("intern_access_token")
 
             }
         })
@@ -187,7 +187,7 @@
         }
         await axios.post(`http://localhost:8080/api/v1/products/${userId}`, JSON.stringify(payload), {
             headers: {
-                'Authorization': "Bearer " + localStorage.getItem("intern_access_token")
+                'Authorization': "Bearer " + sessionStorage.getItem("intern_access_token")
                 , 'Content-Type': 'application/json;charset=UTF-8'
             }
         })

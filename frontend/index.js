@@ -4,8 +4,9 @@ logoutBtn.addEventListener("click", function () {
   window.location.href = "login.html";
 });
 
-const intern_refresh_token = localStorage.getItem("intern_refresh_token");
-if (intern_refresh_token) {
+const intern_access_token_login = sessionStorage.getItem("intern_access_token");
+const intern_refresh_token_login = localStorage.getItem("intern_refresh_token");
+if (intern_access_token_login && intern_refresh_token_login) {
   console.log("Login");
 } else {
   console.log("Not login");

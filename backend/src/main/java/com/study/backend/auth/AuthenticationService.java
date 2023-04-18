@@ -1,13 +1,13 @@
 package com.study.backend.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.backend.config.JwtService;
-import com.study.backend.user.CustomUserDetails;
-import com.study.backend.user.User;
+import com.study.backend.exception.ForbiddenException;
 import com.study.backend.repository.UserRepository;
 import com.study.backend.token.Token;
 import com.study.backend.token.TokenRepository;
 import com.study.backend.token.TokenType;
+import com.study.backend.user.CustomUserDetails;
+import com.study.backend.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -93,7 +93,7 @@ public class AuthenticationService {
     tokenRepository.saveAll(validUserTokens);
   }
 
-  public void refreshToken(
+  public AuthenticationResponse refreshToken(
           HttpServletRequest request,
           HttpServletResponse response
   ) throws IOException {
@@ -101,22 +101,24 @@ public class AuthenticationService {
     final String refreshToken;
     final String userEmail;
     if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-      return;
+      throw new ForbiddenException("Not have auth token or auth token not start with Bearer!");
     }
     refreshToken = authHeader.substring(7);
+    System.out.println("refreshToken " +  refreshToken);
     userEmail = jwtService.extractUsername(refreshToken);
+    System.out.println("userEmail " + userEmail);
     if (userEmail != null) {
       var user = this.repository.findByEmail(userEmail);
       if (jwtService.isTokenValid(refreshToken, new CustomUserDetails(user))) {
         var accessToken = jwtService.generateToken(new CustomUserDetails(user));
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
-        var authResponse = AuthenticationResponse.builder()
+        return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-        new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
       }
     }
+    return null;
   }
 }

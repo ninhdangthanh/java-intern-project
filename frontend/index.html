@@ -66,9 +66,10 @@
 </html>
 <script src="index.js"></script>
 <script>
+
     var product_list_item = document.querySelector(".product_list_item");
     var product_items;
-    const intern_access_token = localStorage.getItem("intern_access_token");
+    const intern_access_token = sessionStorage.getItem("intern_access_token");
     axios.get('http://localhost:8080/api/v1/products', {
         headers: {
             'Authorization': "Bearer " + intern_access_token

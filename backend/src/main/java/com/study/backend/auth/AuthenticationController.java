@@ -4,7 +4,6 @@ import com.study.backend.exception.BadRequestException;
 import com.study.backend.exception.ForbiddenException;
 import com.study.backend.exception.NotFoundException;
 import com.study.backend.request.ResponseData;
-import com.study.backend.user.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -70,11 +68,12 @@ public class AuthenticationController {
   }
 
   @PostMapping("/refresh-token")
-  public void refreshToken(
+  public ResponseEntity<ResponseData<AuthenticationResponse>> refreshToken(
       HttpServletRequest request,
       HttpServletResponse response
   ) throws IOException {
-    service.refreshToken(request, response);
+    ResponseData<AuthenticationResponse> data = new ResponseData<>("Success", service.refreshToken(request, response));
+    return ResponseEntity.ok(data);
   }
 
 
