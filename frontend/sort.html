@@ -76,7 +76,7 @@
 
 <script>
     function getIdUser(myfunction) {
-        axios.get(`http://localhost:8080/api/v1/users/email/${localStorage.getItem("intern_user_email")}`, {
+        axios.get(`https://smiling-cactus-production.up.railway.app/api/v1/users/email/${localStorage.getItem("intern_user_email")}`, {
             headers: {
                 'Authorization': "Bearer " + sessionStorage.getItem("intern_access_token")
             }
@@ -93,7 +93,7 @@
     }
 
     function getSortByUserId(userId) {
-        axios.get(`http://localhost:8080/api/v1/sorts/user/${userId}`, {
+        axios.get(`https://smiling-cactus-production.up.railway.app/api/v1/sorts/user/${userId}`, {
             headers: {
                 'Authorization': "Bearer " + sessionStorage.getItem("intern_access_token")
             }

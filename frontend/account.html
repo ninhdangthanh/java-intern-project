@@ -124,7 +124,7 @@
 
     var userID = null;
 
-    axios.get(`http://localhost:8080/api/v1/users/email/${payload}`, {
+    axios.get(`https://smiling-cactus-production.up.railway.app/api/v1/users/email/${payload}`, {
         headers: {
             'Authorization': "Bearer " + intern_access_token
         }
@@ -159,7 +159,7 @@
         };
         console.log(payload);
 
-        axios.put(`http://localhost:8080/api/v1/users/resetpassword/${userID}`, JSON.stringify(payload), {
+        axios.put(`https://smiling-cactus-production.up.railway.app/api/v1/users/resetpassword/${userID}`, JSON.stringify(payload), {
             headers: {
                 'Authorization': "Bearer " + intern_access_token,
                 'Content-Type': 'application/json;charset=UTF-8',
